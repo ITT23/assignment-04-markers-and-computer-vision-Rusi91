@@ -1,0 +1,11 @@
+INTRODUTION = "Welcome to the image extractor."
+INPUT_TEXT = "ENTER HERE: "
+INPUT_FILE_PATH_QUERY = "Before we start, I need the image path (absolut or relative) of the image you want to work with."
+OUTPUT_FILE_PATH_QUERY = "Where should the transformed file be saved and how should the file be called? Please enter the absolute or relative file path."
+EXTRACTION_INFO = "Select the four points for extraction. Please proceed in the following order: upper left corner, upper right corner, lower left corner and than lower right corner."
+RESOLUTION_QUERY_REQUIREMENT_INFO = "Which resolution do want for your transformed image? (e.g. 600x600, 800x600, ...)"
+RESOLUTION_QUERY_REQUIREMENT_PART_ONE = "Please enter the value before the x."
+RESOLUTION_QUERY_REQUIREMENT_PART_TWO = "Please enter the value after the x"
+
+INPUT_PATH_ERROR = "Path doesn't exist. Please check syntax and try again."
+INPUT_RESOLUTION_ERROR = "Please enter a integer."
