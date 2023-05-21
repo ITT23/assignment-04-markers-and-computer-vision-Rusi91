@@ -8,11 +8,6 @@ from time import sleep
 
 video_id = 0
 
-corner_1 = []
-corner_2 = []
-corner_3 = []
-corner_4 = []
-
 if len(sys.argv) > 1:
     video_id = int(sys.argv[1])
 
@@ -40,8 +35,9 @@ def cv2glet(img,fmt):
 # Create a video capture object for the webcam
 cap = cv2.VideoCapture(video_id)
 
-WINDOW_WIDTH = 640
-WINDOW_HEIGHT = 480
+# how to get the webcam resolution: https://www.learnpythonwithrune.org/find-all-possible-webcam-resolutions-with-opencv-in-python/
+WINDOW_WIDTH = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+WINDOW_HEIGHT = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
 # Define the ArUco dictionary and parameters
 aruco_dict = aruco.getPredefinedDictionary(aruco.DICT_6X6_250)
@@ -51,7 +47,7 @@ window = pyglet.window.Window(WINDOW_WIDTH, WINDOW_HEIGHT)
 
 @window.event
 def on_draw():
-    global corner_1, corner_2, corner_3, corner_4
+
     window.clear()
     ret, frame = cap.read()
 
@@ -67,11 +63,7 @@ def on_draw():
       corner_3 = [corners[2][0][0][0], corners[2][0][0][1]]
       corner_4 = [corners[3][0][3][0], corners[3][0][3][1]]
 
-      #print(corner_1)
-      #print(corner_2)
-      #print(corner_3)
-      #print(corner_4)
-      print(ids)
+      
 
     # Check if marker is detected
     if ids is not None:
@@ -79,7 +71,7 @@ def on_draw():
         aruco.drawDetectedMarkers(frame, corners)
 
     if len(corners) == 4:
-      frame = get_transformed_img(frame)
+      frame = get_transformed_img(frame, corner_1, corner_2, corner_4, corner_3)
 
 
     img = cv2glet(frame, 'BGR')
@@ -88,13 +80,13 @@ def on_draw():
     sleep(0.1)
     
 
-def get_transformed_img(img_param):
+def get_transformed_img(img_param, marker_point_1, marker_point_2, marker_point_3, marker_point_4):
     img_copy_for_transformation = img_param.copy()
 
     img_width = img_copy_for_transformation.shape[1]
     img_height = img_copy_for_transformation.shape[0]
 
-    input_points = np.float32(np.array([corner_1, corner_2, corner_4, corner_3]))
+    input_points = np.float32(np.array([marker_point_1, marker_point_2, marker_point_3, marker_point_4]))
     destination = np.float32(np.array([[0, 0], [img_width, 0], [img_width, img_height], [0, img_height]]))
     matrix = cv2.getPerspectiveTransform(input_points, destination)
     img_transformed = cv2.warpPerspective(img_copy_for_transformation, matrix, (img_width, img_height), flags=cv2.INTER_LINEAR)
