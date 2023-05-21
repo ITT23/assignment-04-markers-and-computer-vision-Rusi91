@@ -98,11 +98,6 @@ def key_callback(key):
             # ask for the output file path
             print(command_line_text.OUTPUT_FILE_PATH_QUERY)
             output_file_query = input(command_line_text.INPUT_TEXT)
-            # if file path doesn't exist -> ask again
-            if not path.exists(output_file_query):
-                while not path.exists(output_file_query):
-                    print(command_line_text.INPUT_PATH_ERROR)
-                    output_file_query = input(command_line_text.INPUT_TEXT)
             # to avoid bugs regarding the backslash, the input path gets converted into a raw string
             # how to convert a string to a raw string: https://java2blog.com/convert-string-to-raw-string-python/
             raw_output_file_path = output_file_query.encode('unicode_escape').decode()
