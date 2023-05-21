@@ -8,4 +8,7 @@ RESOLUTION_QUERY_REQUIREMENT_PART_ONE = "Please enter the value before the x."
 RESOLUTION_QUERY_REQUIREMENT_PART_TWO = "Please enter the value after the x"
 
 INPUT_PATH_ERROR = "Path doesn't exist. Please check syntax and try again."
+OUTPUT_PATH_ERROR = "Your Path is wrong. Check syntax or maybe you forgot to define the filename at the end."
+OUTPUT_PATH_EXAMPLE_ONE = r"Example absolut file path: C:\Users\User\Documents\GitHub\assignment-04-markers-and-computer-vision-Rusi91\image_extraction\new_file.jpg"
+OUTPUT_PATH_EXAMPLE_TWO = r"Example relative file path: image_extraction\new_file.jpg"
 INPUT_RESOLUTION_ERROR = "Please enter a integer."

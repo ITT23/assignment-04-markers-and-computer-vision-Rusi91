@@ -97,12 +97,26 @@ def key_callback(key):
             img_work_copy = cv2.resize(img_work_copy, (resolution_query_value_before_x, resolution_query_value_after_x))
             # ask for the output file path
             print(command_line_text.OUTPUT_FILE_PATH_QUERY)
-            output_file_query = input(command_line_text.INPUT_TEXT)
-            # to avoid bugs regarding the backslash, the input path gets converted into a raw string
-            # how to convert a string to a raw string: https://java2blog.com/convert-string-to-raw-string-python/
-            raw_output_file_path = output_file_query.encode('unicode_escape').decode()
-            # save file
-            cv2.imwrite(raw_output_file_path, img_work_copy)
+
+            # get output path and save file
+            # check if path is wrong, for example if the file is not defined at the end
+            while True:
+                try: 
+                    output_file_query = input(command_line_text.INPUT_TEXT)
+                    
+                    # to avoid bugs regarding the backslash, the input path gets converted into a raw string
+                    # how to convert a string to a raw string: https://java2blog.com/convert-string-to-raw-string-python/
+                    raw_output_file_path = output_file_query.encode('unicode_escape').decode()
+                    # save file
+                    cv2.imwrite(raw_output_file_path, img_work_copy)
+                    break
+                except:
+                   print(command_line_text.OUTPUT_PATH_ERROR)
+                   print(command_line_text.OUTPUT_PATH_EXAMPLE_ONE)
+                   print(command_line_text.OUTPUT_PATH_EXAMPLE_TWO)
+                   print(command_line_text.OUTPUT_FILE_PATH_QUERY)
+
+            
             # notify user
             print("file was saved at: " + raw_output_file_path)
     # key n
