@@ -55,18 +55,39 @@ def on_draw():
     corners, ids, rejectedImgPoints = aruco.detectMarkers(gray, aruco_dict, parameters=aruco_params)
 
     if len(corners) == 4:
-       print(corners[0][0][0][1])
-       print(corners[0][0][1][1])
-       print(corners[0][0][2][1])
-       print(corners[0][0][3][1])
+      corner_1 = [corners[0][0][0][0], corners[0][0][0][1]]
+      corner_2 = [corners[1][0][0][0], corners[1][0][0][1]]
+      corner_3 = [corners[2][0][0][0], corners[2][0][0][1]]
+      corner_4 = [corners[3][0][0][0], corners[3][0][0][1]]
+
+      print(corner_1)
+      print(corner_2)
+      print(corner_3)
+      print(corner_4)
 
     # Check if marker is detected
     if ids is not None:
         # Draw lines along the sides of the marker
         aruco.drawDetectedMarkers(frame, corners)
 
+    if len(corners) == 4:
+      frame = get_transformed_img(frame, corner_2, corner_1, corner_3, corner_4)
+
 
     img = cv2glet(frame, 'BGR')
     img.blit(0, 0, 0)
+
+def get_transformed_img(img_param, point_one, point_two, point_three, point_four):
+    img_copy_for_transformation = img_param.copy()
+
+    img_width = img_copy_for_transformation.shape[1]
+    img_height = img_copy_for_transformation.shape[0]
+
+    input_points = np.float32(np.array([point_one, point_two, point_three, point_four]))
+    destination = np.float32(np.array([[0, 0], [img_width, 0], [img_width, img_height], [0, img_height]]))
+    matrix = cv2.getPerspectiveTransform(input_points, destination)
+    img_transformed = cv2.warpPerspective(img_copy_for_transformation, matrix, (img_width, img_height), flags=cv2.INTER_LINEAR)
+
+    return img_transformed
 
 pyglet.app.run()
