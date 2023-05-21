@@ -4,6 +4,7 @@ import pyglet
 from PIL import Image
 import sys
 import cv2.aruco as aruco
+from time import sleep
 
 video_id = 0
 
@@ -55,15 +56,16 @@ def on_draw():
     corners, ids, rejectedImgPoints = aruco.detectMarkers(gray, aruco_dict, parameters=aruco_params)
 
     if len(corners) == 4:
-      corner_1 = [corners[0][0][0][0], corners[0][0][0][1]]
+      corner_1 = [corners[0][0][3][0], corners[0][0][3][1]]
       corner_2 = [corners[1][0][0][0], corners[1][0][0][1]]
       corner_3 = [corners[2][0][0][0], corners[2][0][0][1]]
-      corner_4 = [corners[3][0][0][0], corners[3][0][0][1]]
+      corner_4 = [corners[3][0][3][0], corners[3][0][3][1]]
 
-      print(corner_1)
-      print(corner_2)
-      print(corner_3)
-      print(corner_4)
+      #print(corner_1)
+      #print(corner_2)
+      #print(corner_3)
+      #print(corner_4)
+      print(ids)
 
     # Check if marker is detected
     if ids is not None:
@@ -76,6 +78,9 @@ def on_draw():
 
     img = cv2glet(frame, 'BGR')
     img.blit(0, 0, 0)
+
+    sleep(0.1)
+    
 
 def get_transformed_img(img_param, point_one, point_two, point_three, point_four):
     img_copy_for_transformation = img_param.copy()
