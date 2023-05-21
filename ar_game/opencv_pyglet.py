@@ -8,11 +8,24 @@ from time import sleep
 
 video_id = 0
 
-hand_arr = []
-corner_arr = []
-center_marker = (0,0)
+FPS = 10
+DRAW_FREQUENCY = 1 / FPS
 
-color = (255, 0, 0)
+# stores the corner points of the markers
+corner_arr = []
+# coordinates of the 5th marker (game marker)
+center_marker = (0,0)
+# achieved points
+points = 0
+
+# font of the displayed points text
+FONT = cv2.FONT_HERSHEY_SIMPLEX
+# fontScale of the displayed points text
+FONT_SCALE = 1
+# color of the displayed points text
+COLOR = (0, 0, 255) # red
+# Line thickness of the displayed points text
+THICKNESS = 1 # 1 px
 
 if len(sys.argv) > 1:
     video_id = int(sys.argv[1])
@@ -52,9 +65,13 @@ aruco_params = aruco.DetectorParameters()
 
 window = pyglet.window.Window(WINDOW_WIDTH, WINDOW_HEIGHT)
 
+# displayed cirle for the AR game
+circle_position = (300,200)
+circle_color = (255, 0, 0)
+
 @window.event
 def on_draw():
-  global corner_arr, center_marker
+  global corner_arr, center_marker, points, circle_position, circle_color
 
   window.clear()
   ret, frame = cap.read()
@@ -69,9 +86,13 @@ def on_draw():
     corner_arr = []
 
     for i in range(len(corners)):
+      # id 23 is the aruco marker for the game
       if ids[i][0] != 23:
+        # save the corner points
         corner_arr.append([corners[i][0][0][0], corners[i][0][0][1]])
       else:
+        # get coordinates for the center of the aruco marker for the game
+        # source how to get the center: https://stackoverflow.com/questions/53460495/finding-the-center-of-an-aruco-marker
         x_sum = corners[i][0][0][0]+ corners[i][0][1][0]+ corners[i][0][2][0]+ corners[i][0][3][0]
         y_sum = corners[i][0][0][1]+ corners[i][0][1][1]+ corners[i][0][2][1]+ corners[i][0][3][1]
             
@@ -79,66 +100,50 @@ def on_draw():
         y_centerPixel = y_sum*.25
 
         center_marker = (int(x_centerPixel), int(y_centerPixel))
-
-        print(center_marker)
-    
+  
+  # without the game marker just save the corner points
   elif len(corners) >= 4 and 23 not in ids:
     corner_arr = []
     for i in range(len(corners)):
       corner_arr.append([corners[i][0][0][0], corners[i][0][0][1]])
-    
-    #print(corner_arr[0])
-    #print(corner_arr[1])
-    #print(corner_arr[2])
-    #print(corner_arr[3])
 
   # Check if marker is detected
   if ids is not None:
       # Draw lines along the sides of the marker
       aruco.drawDetectedMarkers(frame, corners)
 
+  # extract the region between the markers and transform it to a rectangle
   if len(corners) >= 4:
     frame = get_transformed_img(frame, corner_arr[0], corner_arr[1], corner_arr[3], corner_arr[2])
-    #frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    #frame = cv2.drawContours(frame, contours, -1, (255, 0, 0), 3)
-    #frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    #ret, thresh = cv2.threshold(frame_gray, 128, 255, cv2.THRESH_BINARY)
-    #contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    #img_contours = cv2.drawContours(frame, contours, -1, (255,0,0), 3)
-    
-    #hand_arr = contours
-    #print(hand_arr[0][0][0][0])
 
   if len(corners) >= 4:
-    position = (300, 200)
-    radius = (50)
-    color = (255, 0, 0)
+    # draw circle for the game
+    radius = (100)
     border_width = -1 # -1 means that the shape is filled
-
-    frame = cv2.circle(frame, position, radius, color, border_width)
-
-    
-      
+    frame = cv2.circle(frame, circle_position, radius, circle_color, border_width)
+    # center of the game marker
     x_marker, y_marker = center_marker
-    x_circle, y_circle = position
-
-    print(x_marker)
-    print(y_marker)
-
-    if x_marker >= x_circle - radius and x_marker <= x_circle + radius and y_marker >= y_circle - radius and  y_marker <= y_circle + radius:
-      print("JEtzt aber")
-        
-
+    # center of the game circle
+    x_circle, y_circle = circle_position
     
-
+    # if center coordinates of the game marker collide with the circle -> destro circle, draw new circle and grand 1 point
+    if x_marker >= x_circle - radius and x_marker <= x_circle + radius and y_marker >= y_circle - radius and  y_marker <= y_circle + radius:
+      points += 1
+      # draw new circle with random color (not white) and random position
+      get_random_color()
+      get_random_pos()
+    # draw achieved points
+    frame = cv2.putText(frame, "POINTS: " + str(points), (400, 50), FONT, FONT_SCALE, 
+                    COLOR, THICKNESS, cv2.LINE_AA, False)
+  # draw final image
   img = cv2glet(frame, 'BGR')
   img.blit(0, 0, 0)
 
-  sleep(0.1)
+  sleep(DRAW_FREQUENCY)
     
-
+# get the transformed image
+# It is code that we have been provided with from the last exercise. This code has been adjusted and expanded.
 def get_transformed_img(img_param, marker_point_1, marker_point_2, marker_point_3, marker_point_4):
-    img_copy_for_transformation = img_param.copy()
 
     img_width = img_param.shape[1]
     img_height = img_param.shape[0]
@@ -149,5 +154,21 @@ def get_transformed_img(img_param, marker_point_1, marker_point_2, marker_point_
     img_transformed = cv2.warpPerspective(img_param, matrix, (img_width, img_height), flags=cv2.INTER_LINEAR)
 
     return img_transformed
+
+# random color for every new circle
+def get_random_color():
+    global circle_color
+    # avoid white because of white background
+    r = np.random.randint(0,180)
+    g = np.random.randint(0,180)
+    b = np.random.randint(0,180)
+    circle_color = (r,g,b)
+
+# random position for every new circle
+def get_random_pos():
+    global circle_position
+    x = np.random.randint(50, 400)
+    y = np.random.randint(50, 300)
+    circle_position = (x,y)
 
 pyglet.app.run()

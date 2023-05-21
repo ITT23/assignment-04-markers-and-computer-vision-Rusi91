@@ -22,13 +22,13 @@ input_points_arr = []
 # input point text which is displayed near the input point
 input_points_text_arr = ['[1] upper left corner', '[2] upper right corner', '[3] lower left corner', '[4] lower right corner']
 # font of the displayed input point text
-font = cv2.FONT_HERSHEY_SIMPLEX
+FONT = cv2.FONT_HERSHEY_SIMPLEX
 # fontScale of the displayed input point text
-fontScale = 0.5
+FONT_SCALE = 0.5
 # color of the displayed input point text
-color = (0, 0, 255) # red
+TEXT_COLOR = (0, 0, 255) # red
 # Line thickness of the displayed input point text
-thickness = 1 # 1 px
+THICKNESS = 1 # 1 px
 
 # get the transformed image
 # It is code that we have been provided with from the last exercise. This code has been adjusted and expanded.
@@ -57,8 +57,8 @@ def mouse_callback(event, x, y, flags, param):
             img_work_copy = cv2.circle(img_work_copy, (x, y), 5, (255, 0, 0), -1)
             # input point text
                 # how to input text in cv2: https://www.geeksforgeeks.org/python-opencv-cv2-puttext-method/
-            img_work_copy = cv2.putText(img_work_copy, input_points_text_arr[len(input_points_arr)], (x + INPUT_POINT_TEXT_DISTANCE, y), font, fontScale, 
-                    color, thickness, cv2.LINE_AA, False)
+            img_work_copy = cv2.putText(img_work_copy, input_points_text_arr[len(input_points_arr)], (x + INPUT_POINT_TEXT_DISTANCE, y), FONT, FONT_SCALE, 
+                    TEXT_COLOR, THICKNESS, cv2.LINE_AA, False)
             # save new input point
             input_points_arr.append([x,y])
     # if all 4 input points are provided
