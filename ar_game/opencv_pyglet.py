@@ -54,8 +54,11 @@ def on_draw():
     # Detect ArUco markers in the frame
     corners, ids, rejectedImgPoints = aruco.detectMarkers(gray, aruco_dict, parameters=aruco_params)
 
-    if len(corners) > 0:
-       print(corners[0][0])
+    if len(corners) == 4:
+       print(corners[0][0][0][1])
+       print(corners[0][0][1][1])
+       print(corners[0][0][2][1])
+       print(corners[0][0][3][1])
 
     # Check if marker is detected
     if ids is not None:
