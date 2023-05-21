@@ -1,3 +1,22 @@
+# AR GAME:
+#   
+#   REQUIREMENTS: 
+#       you need a additional aruco marker. I uploaded the marker 'game_marker.jpg'. 
+#       If you want to use another marker you just need to adjust GAME_MARKER_ID below.
+#                    
+#   HOW THE GAME WORKS:
+#       in zoomed / transformed mode the user sees a circle
+#       the user needs to use the 5th marker (gaming marker) to touch with it the circle
+#       if the gaming marker (center position) touches the circle, the circle disappears and a new circle is drown at a random position and random color
+# 
+#   DISCLAIMER: 
+#       I really tried to make a game where the user hand gets detected / tracked but i faild
+#       I tried it with the countour detection but somehow had problems with the collision detection
+#       My approach was to detect the collision with the circle through checking if the position coordinates of the circle are colliding with
+#       one of the coordinates of the contour coordinates. At the end my hand was detected correctly (the contours surrounded only my hand) but
+#       the problem was that the x-value of the the contour coordinates was always 0 - 5 while thy y-value was correct.
+#       So as a result, i tried another gaming idea (which is described above)
+
 import cv2
 import numpy as np
 import pyglet
@@ -10,6 +29,10 @@ video_id = 0
 
 FPS = 10
 DRAW_FREQUENCY = 1 / FPS
+# id of the game marker.
+# you can find it as 'game_marker.jpg'
+# if you want to use another marker, change the id here
+GAME_MARKER_ID = 23
 
 # stores the corner points of the markers
 corner_arr = []
@@ -87,7 +110,7 @@ def on_draw():
 
     for i in range(len(corners)):
       # id 23 is the aruco marker for the game
-      if ids[i][0] != 23:
+      if ids[i][0] != GAME_MARKER_ID:
         # save the corner points
         corner_arr.append([corners[i][0][0][0], corners[i][0][0][1]])
       else:
@@ -102,7 +125,7 @@ def on_draw():
         center_marker = (int(x_centerPixel), int(y_centerPixel))
   
   # without the game marker just save the corner points
-  elif len(corners) >= 4 and 23 not in ids:
+  elif len(corners) >= 4 and GAME_MARKER_ID not in ids:
     corner_arr = []
     for i in range(len(corners)):
       corner_arr.append([corners[i][0][0][0], corners[i][0][0][1]])
