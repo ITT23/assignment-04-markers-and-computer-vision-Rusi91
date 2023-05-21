@@ -1,13 +1,14 @@
 # AR GAME:
 #   
 #   REQUIREMENTS: 
-#       you need a additional aruco marker. I uploaded the marker 'game_marker.jpg'. 
+#       You need a additional aruco marker. I uploaded the marker 'game_marker.jpg'. 
+#       Print out and use 'game_marker.jpg'
 #       If you want to use another marker you just need to adjust GAME_MARKER_ID below.
 #                    
 #   HOW THE GAME WORKS:
-#       in zoomed / transformed mode the user sees a circle
-#       the user needs to use the 5th marker (gaming marker) to touch with it the circle
-#       if the gaming marker (center position) touches the circle, the circle disappears and a new circle is drown at a random position and random color
+#       In zoomed / transformed mode the user sees a circle.
+#       The user needs to use the 5th marker (gaming marker) to touch with it the circle.
+#       If the gaming marker (center position) touches the circle, the circle disappears and a new circle is drown at a random position and random color
 # 
 #   DISCLAIMER: 
 #       I really tried to make a game where the user hand gets detected / tracked but i faild
