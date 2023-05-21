@@ -71,7 +71,7 @@ def on_draw():
         aruco.drawDetectedMarkers(frame, corners)
 
     if len(corners) == 4:
-      frame = get_transformed_img(frame, corner_2, corner_1, corner_3, corner_4)
+      frame = get_transformed_img(frame, corner_2, corner_1, corner_4, corner_3)
 
 
     img = cv2glet(frame, 'BGR')
