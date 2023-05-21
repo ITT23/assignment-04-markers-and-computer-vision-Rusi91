@@ -1,3 +1,11 @@
+# DISCLAIMER:
+#
+#   Sometime the window doesn't pop up directly on the screen (opens after input file path input).
+#   In this case the window did appear and you can find it in your task bar (it's open, it just didn't pop up directly on the screen)
+#   I mentioned it while I tried it on my pc and laptop.
+#   On my laptop it pops up directly on the screen and on my pc it opens in my task bar and needs to be clicked to pop up on screen.
+
+
 import cv2
 import numpy as np
 import command_line_text
