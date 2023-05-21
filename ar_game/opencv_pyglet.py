@@ -8,6 +8,11 @@ from time import sleep
 
 video_id = 0
 
+corner_1 = []
+corner_2 = []
+corner_3 = []
+corner_4 = []
+
 if len(sys.argv) > 1:
     video_id = int(sys.argv[1])
 
@@ -46,6 +51,7 @@ window = pyglet.window.Window(WINDOW_WIDTH, WINDOW_HEIGHT)
 
 @window.event
 def on_draw():
+    global corner_1, corner_2, corner_3, corner_4
     window.clear()
     ret, frame = cap.read()
 
@@ -73,7 +79,7 @@ def on_draw():
         aruco.drawDetectedMarkers(frame, corners)
 
     if len(corners) == 4:
-      frame = get_transformed_img(frame, corner_1, corner_2, corner_4, corner_3)
+      frame = get_transformed_img(frame)
 
 
     img = cv2glet(frame, 'BGR')
@@ -82,13 +88,13 @@ def on_draw():
     sleep(0.1)
     
 
-def get_transformed_img(img_param, point_one, point_two, point_three, point_four):
+def get_transformed_img(img_param):
     img_copy_for_transformation = img_param.copy()
 
     img_width = img_copy_for_transformation.shape[1]
     img_height = img_copy_for_transformation.shape[0]
 
-    input_points = np.float32(np.array([point_one, point_two, point_three, point_four]))
+    input_points = np.float32(np.array([corner_1, corner_2, corner_4, corner_3]))
     destination = np.float32(np.array([[0, 0], [img_width, 0], [img_width, img_height], [0, img_height]]))
     matrix = cv2.getPerspectiveTransform(input_points, destination)
     img_transformed = cv2.warpPerspective(img_copy_for_transformation, matrix, (img_width, img_height), flags=cv2.INTER_LINEAR)
